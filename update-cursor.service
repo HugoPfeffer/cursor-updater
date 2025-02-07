@@ -1,0 +1,9 @@
+[Unit]
+Description=Update Cursor
+
+[Service]
+ExecStart=/home/hpfeffer/.services_scripts/cursor/update-script.sh
+Type=oneshot
+
+[Install]
+WantedBy=default.target
