@@ -1,61 +1,40 @@
-1. Create a new folder for cursor
+# Cursor Installer & Updater for Linux
 
-mkdir -p ~/Applications/cursor
-2. Get the latest version of cursor in that folder
+This script automates the installation and configuration of Cursor AppImage on Linux systems. It performs the following actions:
 
-wget -O ~/Applications/cursor/cursor.AppImage "https://downloader.cursor.sh/linux/appImage/x64"
-3. Make sure AppImage is executable (should already be but still)
+1.  Creates an installation directory (`~/Applications/cursor` by default).
+2.  Downloads the latest Cursor AppImage.
+3.  Makes the AppImage executable.
+4.  Creates a symbolic link for command-line access (`/usr/local/bin/cursor`).
+5.  Downloads an icon for the application.
+6.  Creates a `.desktop` file for application menu integration.
+7.  Sets up and enables a systemd user service to automatically update Cursor at startup.
 
-chmod +x ~/Applications/cursor/cursor.AppImage
-4. Make a symlink to be able to launch cursor from command line
+## Installation
 
-sudo ln -s ~/Applications/cursor/cursor.AppImage /usr/local/bin/cursor
-5. Download this image and put it in ~/Applications/cursor/
-cursor_icon
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/HugoPfeffer/cursor_update.git
+    cd cursor_update
+    ```
+    *Alternatively, download the `install_cursor.sh` script directly.*
 
-6. Create a desktop entry to make it accessible in your menus
+2.  **Make the script executable:**
+    ```bash
+    chmod +x install_cursor.sh
+    ```
 
-nano ~/.local/share/applications/cursor.desktop
-7. Shift + Insert this code in the new file, then Ctrl + X, then Y, then Enter
-Also, change your_username by your actual username.
+3.  **Run the installation script:**
+    ```bash
+    ./install_cursor.sh
+    ```
 
-[Desktop Entry]
-Name=Cursor
-Exec=/home/your_username/Applications/cursor/cursor.AppImage
-Icon=/home/your_username/Applications/cursor/cursor-icon.png
-Type=Application
-Categories=Utility;Development;
-8. Create an update script
+The script will prompt for `sudo` access when creating the symbolic link in `/usr/local/bin`. It will also configure paths using your current username automatically.
 
-nano ~/Applications/cursor/update-cursor.sh
-9. Shift + Insert this code into the script, then Ctrl + X, then Y, then Enter
+## Usage
 
-#!/bin/bash
+After installation, you can launch Cursor:
+*   From your application menu.
+*   By typing `cursor` in your terminal.
 
-APPDIR=~/Applications/cursor
-APPIMAGE_URL="https://downloader.cursor.sh/linux/appImage/x64"
-
-wget -O $APPDIR/cursor.AppImage $APPIMAGE_URL
-chmod +x $APPDIR/cursor.AppImage
-10. Make this script executable
-
-chmod +x ~/Applications/cursor/update-cursor.sh
-11. Create a service to update cursor at startup
-
-nano ~/.config/systemd/user/update-cursor.service
-12.Shift + Insert this code into the service, then Ctrl + X, then Y, then Enter
-Also, change your_username by your actual username.
-
-[Unit]
-Description=Update Cursor
-
-[Service]
-ExecStart=/home/your_username/Applications/cursor/update-cursor.sh
-Type=oneshot
-
-[Install]
-WantedBy=default.target
-13. Enable and start the service
-
-systemctl --user enable update-cursor.service
-systemctl --user start update-cursor.service
+The application will automatically check for updates each time you log in, thanks to the systemd service. You can manually trigger an update by running the script located at `~/Applications/cursor/update-cursor.sh` (created by the main install script).
